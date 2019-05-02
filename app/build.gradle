@@ -25,7 +25,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation "com.google.ar.sceneform:core:1.7.0"
+    implementation "com.google.ar.sceneform:core:1.8.0"
     implementation 'com.github.zhaokaiqiang.klog:library:1.6.0'
     implementation project(':androidhelper')
 }

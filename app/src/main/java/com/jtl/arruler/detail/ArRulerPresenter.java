@@ -12,6 +12,7 @@ import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 import com.jtl.arruler.base.BasePresenter;
+import com.jtl.arruler.helper.SessionHelper;
 import com.socks.library.KLog;
 
 /**
@@ -20,7 +21,7 @@ import com.socks.library.KLog;
  * 描述:
  * 更改:
  */
-public class ArRulerPresenter extends BasePresenter<ArRulerContract.View> implements ArRulerContract.Presenter<ArRulerContract.View>  {
+public class ArRulerPresenter extends BasePresenter<ArRulerContract.View> implements ArRulerContract.Presenter<ArRulerContract.View> {
     private boolean isARCoreInstall;
     private Session mSession;
 
@@ -35,55 +36,46 @@ public class ArRulerPresenter extends BasePresenter<ArRulerContract.View> implem
 
     @Override
     public boolean initSession(Context context) {
-        Exception exception=new Exception();
-        String message="";
-        if (mSession==null){
+        Exception exception = new Exception();
+        String message = "";
+        if (mSession == null) {
             try {
-                switch (ArCoreApk.getInstance().requestInstall((Activity) getView(),!isARCoreInstall)){
+                switch (ArCoreApk.getInstance().requestInstall((Activity) getView(), !isARCoreInstall)) {
                     case INSTALLED:
                         getView().showToast("已安装");
                         break;
                     case INSTALL_REQUESTED:
-                        isARCoreInstall= true;
+                        isARCoreInstall = true;
                         break;
                 }
 
-                mSession=new Session(context);
-
+                mSession = SessionHelper.getInstance().getSession(context);
             } catch (UnavailableDeviceNotCompatibleException e) {
-                exception=e;
+                exception = e;
                 message = "This device does not support AR";
             } catch (UnavailableUserDeclinedInstallationException e) {
-                exception=e;
+                exception = e;
                 message = "Please install ARCore";
-            } catch (UnavailableArcoreNotInstalledException e) {
-                exception=e;
-                message = "Please install ARCore";
-            } catch (UnavailableSdkTooOldException e) {
-                exception=e;
-                message = "Please update ARCore";
-            } catch (UnavailableApkTooOldException e) {
-                exception=e;
-                message = "Please update this app";
             }
-            KLog.e(exception+":"+message);
+            KLog.e(exception + ":" + message);
             getView().showSnackBar(message);
         }
-        return true;
+        return mSession != null;//mSession 初始化成功时不为NULL
     }
 
     @Override
     public void resumeSession() {
-        try {
-            mSession.resume();
-        } catch (CameraNotAvailableException e) {
-            getView().showSnackBar("Camera not available. Please restart the app.");
-            mSession = null;
-        }
+        SessionHelper.getInstance().resumeSession();
+
     }
 
     @Override
     public void pauseSession() {
-        mSession.pause();
+        SessionHelper.getInstance().pauseSession();
+    }
+
+    @Override
+    public void closeSession() {
+        SessionHelper.getInstance().closeSession();
     }
 }

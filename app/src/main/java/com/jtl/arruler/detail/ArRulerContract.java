@@ -23,5 +23,6 @@ public class ArRulerContract {
         boolean initSession(Context context);
         void resumeSession();
         void pauseSession();
+        void closeSession();
     }
 }
