@@ -1,6 +1,7 @@
 package com.jtl.arruler.detail;
 
 import android.content.Context;
+import android.view.MotionEvent;
 
 import com.jtl.arruler.base.BasePresenterImpl;
 import com.jtl.arruler.base.BaseViewImpl;
@@ -13,8 +14,6 @@ import com.jtl.arruler.base.BaseViewImpl;
  */
 public class ArRulerContract {
     interface View extends BaseViewImpl{
-        void initSession();
-
         void showToast(String msg);
         void showSnackBar(String msg);
     }
@@ -24,5 +23,8 @@ public class ArRulerContract {
         void resumeSession();
         void pauseSession();
         void closeSession();
+
+        void addRuler();
+        void deleteRuler();
     }
 }

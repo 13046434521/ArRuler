@@ -9,7 +9,6 @@ import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
-import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 import com.socks.library.KLog;
 
 /**
@@ -69,6 +68,7 @@ public class SessionHelper {
         try {
             if (mSession != null) {
                 mSession.resume();
+                KLog.e(TAG + ":" + "resumeSession");
             }
         } catch (CameraNotAvailableException e) {
             Log.e(TAG, "Camera not available. Please restart the app.");
@@ -79,12 +79,15 @@ public class SessionHelper {
     public void pauseSession() {
         if (mSession != null) {
             mSession.pause();
+            KLog.e(TAG + ":" + "pauseSession");
         }
     }
 
     public void closeSession(){
         if (mSession != null) {
             mSession.close();
+            mSession=null;//mSession 若不设为null  GC不回收
+            KLog.e(TAG + ":" + "closeSession");
         }
     }
 

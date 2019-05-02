@@ -15,4 +15,57 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_ruler_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_ruler_prompt"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_ruler_show"
+        app:layout_constraintEnd_toEndOf="@+id/gl_ruler_show"
+        app:layout_constraintStart_toStartOf="@+id/gl_ruler_show"
+        app:layout_constraintTop_toTopOf="@+id/gl_ruler_show"/>
+
+    <TextView
+        android:id="@+id/tv_ruler_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ruler_prompt_bg"
+        android:text="请移动手机"
+        android:alpha="0.6"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:layout_marginTop="50dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="11dp"
+        app:layout_constraintStart_toStartOf="@+id/gl_ruler_show"
+        app:layout_constraintTop_toTopOf="@+id/gl_ruler_show"
+        app:layout_constraintEnd_toEndOf="@+id/gl_ruler_show"/>
+
+    <ImageView
+        android:id="@+id/iv_ruler_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_ruler_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="20dp"/>
+
+    <ImageView
+        android:id="@+id/iv_ruler_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:src="@mipmap/icon_ruler_delete"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_ruler_add"
+        app:layout_constraintEnd_toEndOf="@+id/gl_ruler_show"
+        app:layout_constraintTop_toTopOf="@+id/iv_ruler_add"/>
+
+    <android.support.constraint.Group
+        android:id="@+id/group_ruler_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_ruler_prompt,tv_ruler_prompt"/>
 </android.support.constraint.ConstraintLayout>

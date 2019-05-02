@@ -12,10 +12,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.jtl.arruler.helper;
 
-precision mediump float;
-varying vec4 v_Color;
+import android.view.MotionEvent;
 
-void main() {
-    gl_FragColor = v_Color;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+/**
+ * Helper to detect taps using Android GestureDetector, and pass the taps between UI thread and
+ * render thread.
+ */
+public final class TapHelper {
+  private final BlockingQueue<MotionEvent> queuedSingleTaps = new ArrayBlockingQueue<>(16);
+
+  public MotionEvent poll() {
+    return queuedSingleTaps.poll();//
+  }
+
+  public void push(MotionEvent me){
+      queuedSingleTaps.add(me);
+  }
 }

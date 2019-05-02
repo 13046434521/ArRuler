@@ -12,21 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#extension GL_OES_EGL_image_external : require
 
-uniform mat4 u_ModelView;
-uniform mat4 u_ModelViewProjection;
-
-attribute vec4 a_Position;
-attribute vec3 a_Normal;
-attribute vec2 a_TexCoord;
-
-varying vec3 v_ViewPosition;
-varying vec3 v_ViewNormal;
+precision mediump float;
+uniform sampler2D u_TextureUnit;
 varying vec2 v_TexCoord;
+uniform vec4 u_Color;
+vec4 v_Color;
 
 void main() {
-    v_ViewPosition = (u_ModelView * a_Position).xyz;
-    v_ViewNormal = normalize((u_ModelView * vec4(a_Normal, 0.0)).xyz);
-    v_TexCoord = a_TexCoord;
-    gl_Position = u_ModelViewProjection * a_Position;
+    v_Color = texture2D(u_TextureUnit, v_TexCoord);
+    if(v_Color.r ==1.0&&v_Color.g==1.0&&v_Color.b==1.0&&v_Color.a ==1.0){
+         discard;
+    }
+    gl_FragColor = v_Color;
+//    gl_FragColor = texture2D(u_TextureUnit, v_TexCoord);
 }

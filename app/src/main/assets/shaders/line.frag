@@ -12,17 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#extension GL_OES_EGL_image_external : require
 
-uniform mat4 u_ModelViewProjection;
+precision mediump float;
 uniform vec4 u_Color;
-uniform float u_PointSize;
-
-attribute vec4 a_Position;
-
-varying vec4 v_Color;
 
 void main() {
-   v_Color = u_Color;
-   gl_Position = u_ModelViewProjection * vec4(a_Position.xyz, 1.0);
-   gl_PointSize = u_PointSize;
+    gl_FragColor = u_Color;
 }

@@ -32,10 +32,14 @@ public class ShaderUtil {
    * @param filename The filename of the asset file about to be turned into a shader.
    * @return The shader object handler.
    */
-  public static int loadGLShader(String tag, Context context, int type, String filename)
-      throws IOException {
-    String code = readRawTextFileFromAssets(context, filename);
+  public static int loadGLShader(String tag, Context context, int type, String filename){
+    String code = null;
     int shader = GLES20.glCreateShader(type);
+    try {
+      code = readRawTextFileFromAssets(context, filename);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     GLES20.glShaderSource(shader, code);
     GLES20.glCompileShader(shader);
 

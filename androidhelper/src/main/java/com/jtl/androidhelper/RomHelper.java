@@ -9,10 +9,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Created by yan.wang on 2018/10/30.
+ * 作者:jtl
+ * 日期:Created in 2019/5/2 23:25
+ * 描述:
+ * 更改:
  */
 public class RomHelper {
-
     private static final String TAG = "Rom";
 
     public static final String ROM_MIUI = "MIUI";

@@ -67,7 +67,7 @@ public class BackgroundRenderer {
      *
      * @param context Needed to access shader source.
      */
-    public void createOnGlThread(Context context) throws IOException {
+    public void createOnGlThread(Context context){
         // Generate the background texture.
         //用于存储返回的纹理对象ID
         int[] textures = new int[1];

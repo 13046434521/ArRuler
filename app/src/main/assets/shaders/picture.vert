@@ -12,26 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jtl.androidhelper;
 
-import android.view.MotionEvent;
+attribute vec4 a_Position;
+attribute vec2 a_TexCoord;
+uniform mat4 mvpMatrix;
+varying vec2 v_TexCoord;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
-/**
- * Helper to detect taps using Android GestureDetector, and pass the taps between UI thread and
- * render thread.
- */
-public final class TapHelper {
-  private final BlockingQueue<MotionEvent> queuedSingleTaps = new ArrayBlockingQueue<>(16);
-
-  public MotionEvent poll() {
-    return queuedSingleTaps.poll();//
-  }
-
-  public void push(MotionEvent me){
-      queuedSingleTaps.add(me);
-  }
-
+void main() {
+//   gl_Position = mvpMatrix * vec4(a_Position,1);
+//   gl_Position = a_Position;
+   gl_Position = mvpMatrix * a_Position;
+   gl_PointSize = 30.0;
+   v_TexCoord = a_TexCoord;
 }
+
