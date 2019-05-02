@@ -8,7 +8,6 @@ import android.opengl.Matrix;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Camera;
 import com.google.ar.core.Frame;
@@ -138,7 +137,7 @@ public class ArRulerSurface extends GLSurfaceView implements GLSurfaceView.Rende
             if (!isHitTest){
                 return;
             }
-            //多线程，加锁
+            //多线程，加锁。防止主线程remove，这里绘制时数组越界。
             synchronized (mAnchorList) {
                 if (mTapHelper.poll() != null) {
                     //最多绘制10个点
@@ -153,7 +152,7 @@ public class ArRulerSurface extends GLSurfaceView implements GLSurfaceView.Rende
 
                 int count = mAnchorList.size();
                 int pointCount = count % 2 == 0 ? count : count - 1;//只渲染锚定的点。
-                boolean isSingle = count % 2 == 0 ? false : true;//只渲染锚定的点。
+                boolean isSingle = count % 2 != 0;//只渲染锚定的点。
                 //渲染点
                 for (int i = 0; i < pointCount; i++) {
                     float[] model = mAnchorList.get(i).getPose().getTranslation();
@@ -270,7 +269,7 @@ public class ArRulerSurface extends GLSurfaceView implements GLSurfaceView.Rende
         float[] cameraMatrix = new float[16];
         cameraPose.toMatrix(cameraMatrix, 0);
         Matrix.multiplyMV(cameraNormal, 0, cameraMatrix, 0, cameraNormal, 0);
-        return MathUtil.pointMultiplication(center, cameraNormal) > 0 ? true : false;
+        return MathUtil.pointMultiplication(center, cameraNormal) > 0;
     }
 
 
