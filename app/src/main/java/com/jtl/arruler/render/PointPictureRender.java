@@ -14,8 +14,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.opengles.GL;
-
 /**
  * 作者:jtl
  * 日期:Created in 2019/5/3 0:32
@@ -39,15 +37,27 @@ public class PointPictureRender extends BaseRender {
 
     private int[] texture = new int[1];
     private float[] mMvpMatrix = new float[16];
-    private float[] originalPosition = new float[18];
-    private float[] texturePosition = {
-            0.0f,1.0f,
-            1.0f,1.0f,
-            1.0f,0.0f,
-            0.0f,1.0f,
-            1.0f,0.0f,
-            0.0f,0.0f,
+    //    private float[] originalPosition = new float[18];
+//    private float[] originalPosition = new float[18];
+    private static final float position = 0.06f;
+    private static final float[] originalPosition =
+            new float[]{
+                    -position, 0.0f, -position,
+                    +position, 0.0f, -position,
+                    +position, 0.0f, +position,
+                    -position, 0.0f, -position,
+                    +position, 0.0f, +position,
+                    -position, 0.0f, +position,
+            };
+    private static final float[] texturePosition = {
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 1.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
     };
+
     @Override
     public void createOnGlThread(Context context) {
         try {
@@ -73,7 +83,8 @@ public class PointPictureRender extends BaseRender {
         a_TexCoord = GLES20.glGetAttribLocation(program, "a_TexCoord");
         mvpMatrix = GLES20.glGetUniformLocation(program, "mvpMatrix");
         u_TextureUnit = GLES20.glGetAttribLocation(program, "u_TextureUnit");
-
+        GLES20.glDeleteShader(vertexShader);
+        GLES20.glDeleteShader(fragmentShader);
         ShaderUtil.checkGLError(TAG, "loadShader Error");
     }
 
@@ -92,20 +103,32 @@ public class PointPictureRender extends BaseRender {
     }
 
     public void upData(float[] pose, float[] viewMatrix, float[] projectMatrix) {
-        Matrix.setIdentityM(mMvpMatrix,0);
-        Matrix.multiplyMM(mMvpMatrix,0,viewMatrix,0,pose,0);//视矩阵 * 世界坐标 = 相机坐标系坐标
-        Matrix.multiplyMM(mMvpMatrix,0,projectMatrix,0,mMvpMatrix,0);// 相机坐标 * 投影矩阵 = 裁剪坐标系坐标
+        Matrix.setIdentityM(mMvpMatrix, 0);
+        Matrix.multiplyMM(mMvpMatrix, 0, viewMatrix, 0, pose, 0);//视矩阵 * 世界坐标 = 相机坐标系坐标
+        Matrix.multiplyMM(mMvpMatrix, 0, projectMatrix, 0, mMvpMatrix, 0);// 相机坐标 * 投影矩阵 = 裁剪坐标系坐标
 
-        originalPosition[0] = -0.06f;originalPosition[1] = 0f;originalPosition[2] = -0.06f;
-        originalPosition[3] = 0.06f;originalPosition[4] = 0f;originalPosition[5] = -0.06f;
-        originalPosition[6] = 0.06f;originalPosition[7] = 0f;originalPosition[8] = 0.06f;
-        originalPosition[9] = -0.06f;originalPosition[10] = 0f;originalPosition[11] = -0.06f;
-        originalPosition[12] = 0.06f;originalPosition[13] = 0f;originalPosition[14] = 0.06f;
-        originalPosition[15] = -0.06f;originalPosition[16] = 0f;originalPosition[17] = 0.06f;
+//        originalPosition[0] = -0.06f;
+//        originalPosition[1] = 0f;
+//        originalPosition[2] = -0.06f;
+//        originalPosition[3] = 0.06f;
+//        originalPosition[4] = 0f;
+//        originalPosition[5] = -0.06f;
+//        originalPosition[6] = 0.06f;
+//        originalPosition[7] = 0f;
+//        originalPosition[8] = 0.06f;
+//        originalPosition[9] = -0.06f;
+//        originalPosition[10] = 0f;
+//        originalPosition[11] = -0.06f;
+//        originalPosition[12] = 0.06f;
+//        originalPosition[13] = 0f;
+//        originalPosition[14] = 0.06f;
+//        originalPosition[15] = -0.06f;
+//        originalPosition[16] = 0f;
+//        originalPosition[17] = 0.06f;
 
 
         //坐标点的缓冲流
-        ByteBuffer bbVertices  = ByteBuffer.allocateDirect(originalPosition.length * FLOAT_SIZE);
+        ByteBuffer bbVertices = ByteBuffer.allocateDirect(originalPosition.length * FLOAT_SIZE);
         bbVertices.order(ByteOrder.nativeOrder());
         quadVertices = bbVertices.asFloatBuffer();
         quadVertices.put(originalPosition);
@@ -119,8 +142,8 @@ public class PointPictureRender extends BaseRender {
         quadTextureVertices.position(0);
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,texture[0]);
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D,0,mBitmap,0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture[0]);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, mBitmap, 0);
         GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
 
         ShaderUtil.checkGLError(TAG, "upData Error");
@@ -128,17 +151,17 @@ public class PointPictureRender extends BaseRender {
 
     public void onDraw() {
         GLES20.glUseProgram(program);
-        GLES20.glUniformMatrix4fv(mvpMatrix,1,false,mMvpMatrix,0);
-        GLES20.glVertexAttribPointer(a_Position,3,GLES20.GL_FLOAT,false,0,quadVertices);
-        GLES20.glVertexAttribPointer(a_TexCoord,2,GLES20.GL_FLOAT,false,0,quadTextureVertices);
+        GLES20.glUniformMatrix4fv(mvpMatrix, 1, false, mMvpMatrix, 0);
+        GLES20.glVertexAttribPointer(a_Position, 3, GLES20.GL_FLOAT, false, 0, quadVertices);
+        GLES20.glVertexAttribPointer(a_TexCoord, 2, GLES20.GL_FLOAT, false, 0, quadTextureVertices);
 
         GLES20.glEnableVertexAttribArray(a_Position);
         GLES20.glEnableVertexAttribArray(a_TexCoord);
 
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glDepthMask(false);//否则会出现遮挡效果
-        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA,GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES,0,6);
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
         GLES20.glDisableVertexAttribArray(a_Position);
         GLES20.glDisableVertexAttribArray(a_TexCoord);

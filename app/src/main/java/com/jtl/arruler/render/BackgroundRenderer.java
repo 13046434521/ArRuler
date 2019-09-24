@@ -20,10 +20,9 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
-import com.google.ar.core.Session;
 import com.google.ar.core.Frame;
+import com.google.ar.core.Session;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -124,6 +123,9 @@ public class BackgroundRenderer {
         GLES20.glLinkProgram(quadProgram);
         //制定使用某套shader程序，向顶点着色器中传递数据前需要调用这个房方法
         GLES20.glUseProgram(quadProgram);
+        //用完就可以删除了
+        GLES20.glDeleteShader(vertexShader);
+        GLES20.glDeleteShader(fragmentShader);
 
         ShaderUtil.checkGLError(TAG, "Program creation");
         //获取顶点着色器的两个参数（用于往着色器里传值，类似指针）

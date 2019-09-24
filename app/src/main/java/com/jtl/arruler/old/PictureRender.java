@@ -10,7 +10,6 @@ import android.opengl.Matrix;
 import com.google.ar.sceneform.math.Vector3;
 import com.jtl.arruler.render.ShaderUtil;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;

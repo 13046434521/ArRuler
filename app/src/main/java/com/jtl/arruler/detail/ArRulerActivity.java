@@ -1,11 +1,11 @@
 package com.jtl.arruler.detail;
 
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.constraint.Group;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,7 +55,6 @@ public class ArRulerActivity extends AppCompatActivity implements ArRulerContrac
         if (mArRulerPresenter != null) {
             mArRulerPresenter.pauseSession();
         }
-
     }
 
     @Override
