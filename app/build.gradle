@@ -4,12 +4,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    namespace "com.android.ar_ruler_kt"
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.android.ar_ruler_kt"
         minSdk 21
-        targetSdk 31
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -23,11 +24,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
