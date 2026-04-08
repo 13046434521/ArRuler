@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ar_ruler_kt"
 include ':app'
-include ':hello_ar_kotlin'
