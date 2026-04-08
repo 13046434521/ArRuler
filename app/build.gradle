@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace "com.android.ar_ruler_kt"
-    compileSdk 34
+    compileSdk = 37
 
     defaultConfig {
         applicationId "com.android.ar_ruler_kt"
-        minSdk 21
-        targetSdk 34
+        minSdk 24
+        targetSdk 37
         versionCode 1
         versionName "1.0"
 
@@ -30,22 +30,18 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    buildToolsVersion '36.0.0'
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'com.google.android.material:material:1.6.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 
     // ARCore (Google Play Services for AR) library.
-    implementation 'com.google.ar:core:1.32.0'
-    // Obj - a simple Wavefront OBJ file loader
-    // https://github.com/javagl/Obj
-    implementation 'de.javagl:obj:0.2.1'
-
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.1'
+    implementation 'com.google.ar:core:1.53.0'
 }

@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Point
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 
 /**
  * @author：TianLong
@@ -15,7 +17,9 @@ object Helper :HelperInterface {
     fun obtainScreenSize(context: Context): Point {
         var displayMetrics = DisplayMetrics()
         if (context is Activity) {
-            context.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            context.display?.getRealMetrics(displayMetrics) ?: run {
+                displayMetrics = context.resources.displayMetrics
+            }
         } else {
             displayMetrics = context.resources.displayMetrics
         }
@@ -30,15 +34,22 @@ object Helper :HelperInterface {
      */
     fun setFullScreenOnWindowFocusChanged(activity: Activity, hasFocus: Boolean) {
         if (hasFocus) {
-            // https://developer.android.com/training/system-ui/immersive.html#sticky
-            activity
-                .window
-                .decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            // 使用新的 WindowInsetsController API 实现全屏沉浸模式
+            val window = activity.window
+            val insetsController = window.insetsController
+            if (insetsController != null) {
+                insetsController.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                insetsController.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            } else {
+                // 降级到旧API
+                @Suppress("DEPRECATION")
+                window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_FULLSCREEN
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+            }
         }
     }
 }
