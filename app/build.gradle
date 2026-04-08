@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace "com.android.ar_ruler_kt"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId "com.android.ar_ruler_kt"
         minSdk 24
-        targetSdk 37
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
