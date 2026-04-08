@@ -3,6 +3,7 @@ package com.android.ar_ruler_kt.helper
 import android.app.Activity
 import android.content.Context
 import android.graphics.Point
+import android.os.Build
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.WindowInsets
@@ -13,17 +14,31 @@ import android.view.WindowInsetsController
  * @date：2022/6/27 21:53
  * @detail：
  */
-object Helper :HelperInterface {
+object Helper : HelperInterface {
     fun obtainScreenSize(context: Context): Point {
-        var displayMetrics = DisplayMetrics()
+        val point = Point()
         if (context is Activity) {
-            context.display?.getRealMetrics(displayMetrics) ?: run {
-                displayMetrics = context.resources.displayMetrics
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                context.display?.getRealSize(point)
+            } else {
+                @Suppress("DEPRECATION")
+                val displayMetrics = DisplayMetrics()
+                context.windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+                point.x = displayMetrics.widthPixels
+                point.y = displayMetrics.heightPixels
+            }
+            if (point.x <= 0 || point.y <= 0) {
+                // Final fallback
+                val displayMetrics = context.resources.displayMetrics
+                point.x = displayMetrics.widthPixels
+                point.y = displayMetrics.heightPixels
             }
         } else {
-            displayMetrics = context.resources.displayMetrics
+            val displayMetrics = context.resources.displayMetrics
+            point.x = displayMetrics.widthPixels
+            point.y = displayMetrics.heightPixels
         }
-        return Point(displayMetrics.widthPixels,displayMetrics.heightPixels)
+        return point
     }
 
     /**
@@ -36,12 +51,13 @@ object Helper :HelperInterface {
         if (hasFocus) {
             // 使用新的 WindowInsetsController API 实现全屏沉浸模式
             val window = activity.window
-            val insetsController = window.insetsController
-            if (insetsController != null) {
-                insetsController.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                insetsController.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // New API for Android 11+
+                val insetsController = window.insetsController
+                insetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                insetsController?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             } else {
-                // 降级到旧API
+                // Legacy API for Android < 11
                 @Suppress("DEPRECATION")
                 window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
